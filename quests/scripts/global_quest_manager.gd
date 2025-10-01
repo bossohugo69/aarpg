@@ -24,9 +24,12 @@ func _unhandled_input (event: InputEvent ) -> void:
 		#print( "get_quest_index_by_title: ", get_quest_index_by_title("Short Quest"))
 		
 		#print( "before: ", current_quests )
-		update_quest( "short quest", "", true )
-		update_quest( "Recover Lost Magical Flute", "Find the Magical Flute" )
-		update_quest( "Recover Lost Magical Flute", "", true )
+		#update_quest( "Recover Lost Magical Flute" )
+		#update_quest( "Recover Lost Magical Flute", "", true )
+		#update_quest( "short quest", "", true )
+		#update_quest( "long quest", "step 1" )
+		#update_quest( "long quest", "step 2" )
+		
 		print( "quests: ", current_quests )
 		#print( "===========================================================" )
 		pass
@@ -41,7 +44,7 @@ func gather_quest_data() -> void:
 	for q in quest_files:
 		quests.append( load( QUEST_DATA_LOCATION + "/" + q ) as Quest )
 		pass
-	print( "quests count: ", quests.size() )
+	#print( "quests count: ", quests.size() )
 	pass
 
 
@@ -58,7 +61,7 @@ func update_quest( _title : String, _completed_step : String = "", _is_complete 
 		}
 		
 		if _completed_step != "":
-			new_quest.completed_steps.append( _completed_step )
+			new_quest.completed_steps.append( _completed_step.to_lower() )
 		
 		current_quests.append( new_quest )
 		quest_updated.emit( new_quest )
@@ -69,10 +72,10 @@ func update_quest( _title : String, _completed_step : String = "", _is_complete 
 		# Quest was found, update it
 		var q = current_quests[ quest_index ]
 		if _completed_step != "" and q.completed_steps.has( _completed_step ) == false:
-			q.completed_steps.append( _completed_step )
+			q.completed_steps.append( _completed_step.to_lower() )
 			pass
-		if q.is_complete == false:
-			q.is_complete = _is_complete
+		
+		q.is_complete = _is_complete
 		
 		quest_updated.emit( q )
 		
@@ -121,4 +124,24 @@ func get_quest_index_by_title( _title : String ) -> int:
 
 
 func sort_quests() -> void:
+	var active_quests : Array = []
+	var completed_quests : Array = []
+	for q in current_quests:
+		if q.is_complete:
+			completed_quests.append( q )
+		else:
+			active_quests.append( q )
+	
+	active_quests.sort_custom( sort_quests_ascending )
+	completed_quests.sort_custom( sort_quests_ascending )
+	
+	current_quests = active_quests
+	current_quests.append_array( completed_quests )
+	
 	pass
+
+
+func sort_quests_ascending( a, b ):
+	if a.title < b.title:
+		return true
+	return false

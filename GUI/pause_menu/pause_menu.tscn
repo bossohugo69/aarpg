@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bn30y0as7yikk"]
+[gd_scene load_steps=13 format=3 uid="uid://bn30y0as7yikk"]
 
 [ext_resource type="Script" uid="uid://bjwsbm3nyn5m6" path="res://GUI/pause_menu/pause_menu.gd" id="1_4w82k"]
 [ext_resource type="FontFile" uid="uid://bryfrgecd47xb" path="res://GUI/fonts/m5x7.ttf" id="2_sn1ji"]
@@ -8,6 +8,8 @@
 [ext_resource type="Resource" uid="uid://pji6gypuqur2" path="res://GUI/pause_menu/inventory/player_inventory.tres" id="4_ewgu5"]
 [ext_resource type="PackedScene" uid="uid://dnsy8ihf6rvy0" path="res://GUI/pause_menu/quests/quest_item.tscn" id="7_8rjl7"]
 [ext_resource type="Script" uid="uid://db0b4sqp7v4bi" path="res://GUI/pause_menu/quests_ui.gd" id="7_dvxeg"]
+[ext_resource type="FontFile" uid="uid://bpi7ylfeybgdt" path="res://GUI/fonts/Abaddon Bold.ttf" id="9_qikl0"]
+[ext_resource type="PackedScene" uid="uid://c7ttnto10put2" path="res://GUI/pause_menu/quests/quest_step_item.tscn" id="10_40d0i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rsqrg"]
 atlas = ExtResource("2_yiq8o")
@@ -157,8 +159,38 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/TabContainer/Quests"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 250.0
+offset_top = 17.0
+offset_right = 465.0
+offset_bottom = 61.0
+
+[node name="TitleLabel" type="Label" parent="Control/TabContainer/Quests/VBoxContainer"]
+custom_minimum_size = Vector2(215, 10)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_qikl0")
+text = "Quest Title"
+autowrap_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="Control/TabContainer/Quests/VBoxContainer"]
+modulate = Color(0.60784316, 0.60784316, 0.60784316, 1)
+custom_minimum_size = Vector2(215, 10)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_sn1ji")
+text = "Quest description"
+autowrap_mode = 2
+
+[node name="SpacerControl" type="Control" parent="Control/TabContainer/Quests/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="QuestStepItem" parent="Control/TabContainer/Quests/VBoxContainer" instance=ExtResource("10_40d0i")]
+layout_mode = 2
+
+[node name="QuestStepItem2" parent="Control/TabContainer/Quests/VBoxContainer" instance=ExtResource("10_40d0i")]
+layout_mode = 2
+
+[node name="QuestStepItem3" parent="Control/TabContainer/Quests/VBoxContainer" instance=ExtResource("10_40d0i")]
+layout_mode = 2
 
 [node name="System" type="Control" parent="Control/TabContainer"]
 visible = false
