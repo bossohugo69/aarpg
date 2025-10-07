@@ -4,9 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bcj47rjxh1rw7" path="res://quests/utility_nodes/icons/quest_switch.png" id="2_rmkwn"]
 
 [node name="QuestActivatedSwitch" type="Node2D"]
+z_index = 10
 script = ExtResource("1_1a44c")
-remove_when_activated = null
-react_to_global_signal = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-10, -18)

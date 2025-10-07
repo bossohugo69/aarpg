@@ -8,6 +8,7 @@ signal is_activated_changed( v : bool )
 
 @export var check_type : CheckType = CheckType.HAS_QUEST : set = _set_check_type
 @export var remove_when_activated : bool = false
+@export var free_on_remove : bool = false
 @export var react_to_global_signal : bool = false
 
 var is_activated : bool = false
@@ -17,7 +18,8 @@ var is_activated : bool = false
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	$Sprite2D.queue_free()
+	if has_node("Sprite2D"):
+		$Sprite2D.queue_free()
 	if react_to_global_signal == true:
 		QuestManager.quest_updated.connect( _on_quest_updated )
 	check_is_activated()
@@ -37,7 +39,10 @@ func check_is_activated() -> void:
 		
 		elif check_type == CheckType.QUEST_COMPLETE:
 			# Simply set is activated based on if our quest complete values match
-			set_is_activated( quest_complete == _q.is_complete )
+			var is_complete : bool = false
+			if _q.is_complete is bool:
+				is_complete = _q.is_complete
+			set_is_activated( is_complete )
 		
 		elif check_type == CheckType.QUEST_STEP_COMPLETE:
 			
@@ -49,6 +54,24 @@ func check_is_activated() -> void:
 			else:
 				set_is_activated( false )
 		
+		elif check_type == CheckType.ON_CURRENT_QUEST_STEP:
+			var step : String = get_step()
+			if step == "N/A":
+				set_is_activated( false )
+				pass
+			else:
+				if _q.completed_steps.has( step ):
+					set_is_activated( false )
+				else:
+					var prev_step : String = get_prev_step()
+					if prev_step == "N/A":
+						set_is_activated( true )
+					
+					elif _q.completed_steps.has( prev_step.to_lower() ):
+						set_is_activated( true )
+					else:
+						set_is_activated( false )
+			pass
 		pass
 	else:
 		set_is_activated( false )
@@ -83,8 +106,10 @@ func show_children() -> void:
 
 func hide_children() -> void:
 	for c in get_children():
-		c.set_deferred( "visivle", false )
+		c.set_deferred( "visible", false )
 		c.set_deferred( "process_node", Node.PROCESS_MODE_DISABLED )
+		if free_on_remove:
+			c.queue_free()
 
 
 
